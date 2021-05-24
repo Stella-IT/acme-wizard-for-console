@@ -2,7 +2,7 @@ import { prompts } from 'prompts';
 import chalk from 'chalk';
 
 const MEILING_HOST = 'https://meiling.stella-api.dev';
-const CLIENT_ID = '';
+const CLIENT_ID = 'ab727c84-f9bc-47e3-bf9e-a6a8d7f2604b';
 
 function generateGetVariables(data: { [key: string]: string }) {
   let str = '';
