@@ -1,7 +1,11 @@
-import { buildLogger } from './logger';
+import ACME from 'acme-client';
+import axios from 'axios';
+import { showBanner } from './banner';
+import Log from './logger';
+import { retreiveTokens } from './meiling';
 
-const isVerbose = process.argv.map((n) => n.toLowerCase()).includes('--verbose');
+showBanner();
 
-export const logger = buildLogger({
-  level: isVerbose ? 'silly' : undefined,
-});
+(async () => {
+  await retreiveTokens();
+})();
