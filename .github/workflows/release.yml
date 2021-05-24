@@ -1,0 +1,33 @@
+name: Release Binary Builder
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: "16.x"
+    - name: Installing Yarn
+      run: npm install -g yarn
+    - name: Installing dependencies
+      run: yarn
+    - name: Building TypeScript
+      run: yarn build
+    - name: Package binary
+      run: yarn pkg
+    - name: Upload packages to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./build/xenxenxense_*_all.deb
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
