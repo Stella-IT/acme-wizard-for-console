@@ -1,6 +1,6 @@
 {
   "name": "acme-wizard-for-console",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Let's Encrypt ACME Wizard for Stella IT Console",
   "main": "dist/",
   "repository": "https://github.com/Stella-IT/acme-wizard-for-console",

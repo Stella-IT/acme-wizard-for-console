@@ -166,44 +166,47 @@ let tokens: TokenStore | undefined = undefined;
               email,
             }),
           );
+
+          tosAgree = await (prompts.confirm({
+            type: 'confirm',
+            name: 'tos',
+            message: `Do you agree to Let's Encrypt Terms of Service? (${chalk.cyanBright(
+              chalk.underline('https://letsencrypt.org/repository/'),
+            )})`,
+          }) as unknown as Promise<boolean>);
+
+          if (!tosAgree) {
+            Log.error(
+              "Setup can not continue. Consenting to Let's Encrypt ToS is required to issue valid certificate.",
+            );
+            return;
+          }
+
+          email = await (prompts.text({
+            type: 'text',
+            name: 'email',
+            message: 'Enter the email:',
+            validate: (input) => {
+              return /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/g.test(
+                input,
+              )
+                ? true
+                : 'Not a valid email';
+            },
+            initial: email,
+          }) as unknown as Promise<string>);
+        } else {
+          Log.error("Setup can not continue. Account Key generation is required to request Let's Encrypt Server.");
+          return;
         }
       } else {
         accountKey = choice.accountKey;
         email = choice.email;
+
+        tosAgree = true;
+        Log.info("Skipping ToS since it was previously used in Let's Encrypt");
       }
     }
-
-    if (!accountKey) {
-      Log.error("Setup can not continue. Account Key generation is required to request Let's Encrypt Server.");
-      return;
-    }
-
-    tosAgree = await (prompts.confirm({
-      type: 'confirm',
-      name: 'tos',
-      message: `Do you agree to Let's Encrypt Terms of Service? (${chalk.cyanBright(
-        chalk.underline('https://letsencrypt.org/repository/'),
-      )})`,
-    }) as unknown as Promise<boolean>);
-
-    if (!tosAgree) {
-      Log.error("Setup can not continue. Consenting to Let's Encrypt ToS is required to issue valid certificate.");
-      return;
-    }
-
-    email = await (prompts.text({
-      type: 'text',
-      name: 'email',
-      message: 'Enter the email:',
-      validate: (input) => {
-        return /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/g.test(
-          input,
-        )
-          ? true
-          : 'Not a valid email';
-      },
-      initial: email,
-    }) as unknown as Promise<string>);
   } else {
     Log.info("This domain was previously registered on Let's Encrypt. Skipping ToS Agreement");
     tosAgree = true;
