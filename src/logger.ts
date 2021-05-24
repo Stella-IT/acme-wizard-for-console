@@ -4,13 +4,13 @@ import fs from 'fs';
 
 const Log = {
   info: (...msg: any[]) => {
-    console.log(`[${chalk.cyanBright(chalk.bold('INFO'))}]`, ...msg);
+    console.log(`${chalk.cyanBright(chalk.bold('i'))}`, ...msg);
   },
   warn: (...msg: any[]) => {
-    console.log(`[${chalk.yellowBright(chalk.bold('WARN'))}]`, ...msg);
+    console.log(`${chalk.yellowBright(chalk.bold('W'))}`, ...msg);
   },
   error: (...msg: any[]) => {
-    console.log(`[${chalk.redBright(chalk.bold('EROR'))}]`, ...msg);
+    console.log(`${chalk.redBright(chalk.bold('X'))}`, ...msg);
   },
 };
 

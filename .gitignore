@@ -116,3 +116,7 @@ dist
 # Windows
 ehthumbs.db
 Thumbs.db
+
+# token
+/token.json
+/acme.credentials.json
