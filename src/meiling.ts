@@ -18,7 +18,7 @@ export async function retreiveTokens() {
     client_id: CLIENT_ID,
     response_type: 'code',
     redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-    scope: ['openid', 'email', 'phone', 'https://console.stella-api.dev'].join(' '),
+    scope: ['openid', 'email', 'https://console.stella-api.dev'].join(' '),
     prompt: 'select_account',
   };
 
