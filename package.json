@@ -15,7 +15,6 @@
     "typescript": "^4.0.5"
   },
   "devDependencies": {
-    "pkg": "^5.2.0",
     "@types/figlet": "^1.5.1",
     "@types/node": "^14.14.7",
     "@types/prompts": "^2.0.12",
@@ -26,13 +25,18 @@
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
+    "pkg": "^5.2.0",
     "prettier": "^2.1.2",
     "ts-node": "^9.0.0"
   },
   "bin": "dist/index.js",
   "pkg": {
     "scripts": "dist/**/*.js",
-    "targets": [ "node16-linux", "node16-macos", "node16-windows" ],
+    "targets": [
+      "node16-linux",
+      "node16-macos",
+      "node16-windows"
+    ],
     "outputPath": "build",
     "assets": [
       "node_modules/figlet/fonts/*.flf"
