@@ -9,7 +9,7 @@ const CLIENT_ID = 'ab727c84-f9bc-47e3-bf9e-a6a8d7f2604b';
 export interface TokenStore {
   access_token: string;
   refresh_token: string;
-  expires_at: Date | number;
+  expires_at: Date;
 }
 
 function generateGetVariables(data: { [key: string]: string }) {
@@ -50,6 +50,10 @@ export async function issueTokens(type: 'authorization_code' | 'refresh_token', 
     prev = {
       ...JSON.parse(fs.readFileSync('./token.json', { encoding: 'utf-8' })),
     };
+  }
+
+  if (typeof prev.expires_at === 'string') {
+    prev.expires_at = new Date(prev.expires_at);
   }
 
   try {

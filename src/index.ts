@@ -21,9 +21,14 @@ let tokens: TokenStore | undefined = undefined;
   if (fs.existsSync(TOKEN_FILE)) {
     tokens = JSON.parse(fs.readFileSync(TOKEN_FILE, { encoding: 'utf-8' })) as TokenStore;
 
+    // normalize to TS interface. - Why the heck did I coded like this?
+    if (tokens && typeof tokens.expires_at === 'string') {
+      tokens.expires_at = new Date(tokens.expires_at);
+    }
+
     if (
       !(await isTokenValid('access_token', tokens.access_token)) ||
-      tokens.expires_at < new Date().getTime() - 120 * 1000
+      tokens.expires_at.getTime() < new Date().getTime() - 120 * 1000
     ) {
       if (!(await isTokenValid('refresh_token', tokens.refresh_token))) {
         Log.error('Invalid Refersh Token! Reissue required!');
@@ -42,6 +47,11 @@ let tokens: TokenStore | undefined = undefined;
     tokens = JSON.parse(fs.readFileSync(TOKEN_FILE, { encoding: 'utf-8' })) as TokenStore;
   }
 
+  // recheck just in case
+  if (tokens && typeof tokens.expires_at === 'string') {
+    tokens.expires_at = new Date(tokens.expires_at);
+  }
+
   const http = await axios.get(CONSOLE_API_HOST + '/v1/http', {
     headers: {
       Authorization: 'Bearer ' + tokens?.access_token,
@@ -52,6 +62,11 @@ let tokens: TokenStore | undefined = undefined;
   Log.info(`Welcome! ${chalk.bold(user.name)}`);
 
   const httpProxies: any[] = http.data;
+
+  if (!httpProxies || httpProxies.length === 0) {
+    Log.error("You don't have active HTTP Proxies to activate!");
+    process.exit(1);
+  }
 
   // Mitigation since @types/prompts sucks.
   const selectedProxy = await (prompts.select({
