@@ -33,9 +33,9 @@
   "pkg": {
     "scripts": "dist/**/*.js",
     "targets": [
-      "node16-linux",
-      "node16-macos",
-      "node16-windows"
+      "node18-linux",
+      "node18-macos",
+      "node18-windows"
     ],
     "outputPath": "build",
     "assets": [
