@@ -165,7 +165,7 @@ let tokens: TokenStore | undefined = undefined;
         }) as unknown as Promise<any>);
       }
 
-      if (typeof choice === 'string' && choice === 'other') {
+      if (choice === 'other') {
         const shouldIGenerateOne = await (prompts.confirm({
           type: 'confirm',
           name: 'generateOne',
